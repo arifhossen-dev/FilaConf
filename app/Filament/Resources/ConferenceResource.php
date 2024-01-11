@@ -58,6 +58,10 @@ class ConferenceResource extends Resource
                     ->relationship('venue', 'name', modifyQueryUsing:function(Builder $query, Forms\Get $get){
                         return $query->where('region', $get('region'));
                     }),
+                Forms\Components\CheckboxList::make('speakers')
+                    ->relationship('speakers', 'name')
+                    ->options(SpeakerResource::getModel()::all()->pluck('name', 'id'))
+                    ->required(),
             ]);
     }
 
