@@ -14,6 +14,9 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
@@ -71,7 +74,21 @@ class TalkResource extends Resource
                     })
             ])
             ->filters([
-                //
+                TernaryFilter::make('new_talk'),
+                SelectFilter::make('speaker')
+                    ->relationship('speaker', 'name')
+                    ->multiple()
+                    ->searchable()
+                    ->preload(),
+                Filter::make('has_avatar')
+                    ->label('Show only with Avatar')
+                    ->toggle()
+                    ->query(function (Builder $query) {
+                        $query->whereHas('speaker', function (Builder $query) {
+                            $query->whereNotNull('avatar');
+                        });
+                        return $query;
+                    })
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
