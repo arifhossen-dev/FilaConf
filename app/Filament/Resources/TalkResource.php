@@ -73,6 +73,8 @@ class TalkResource extends Resource
                         };
                     })
             ])
+            ->persistFiltersInSession()
+            ->filtersTriggerAction(fn($action)=>$action->button()->label('Filter'))
             ->filters([
                 TernaryFilter::make('new_talk'),
                 SelectFilter::make('speaker')
