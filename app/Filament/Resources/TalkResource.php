@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\TalkLength;
 use App\Filament\Resources\TalkResource\Pages;
 use App\Filament\Resources\TalkResource\RelationManagers;
 use App\Models\Talk;
@@ -9,9 +10,15 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Nette\Utils\ImageColor;
 
 class TalkResource extends Resource
 {
@@ -40,19 +47,28 @@ class TalkResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('speaker.name')
-                    ->numeric()
+                TextColumn::make('title')
+                    ->searchable()
+                    ->description(fn(Talk $talk) => Str::of($talk->abstract)->limit(60)),
+                ImageColumn::make('speaker.avatar')
+                    ->label('Speaker Avatar')
+                    ->circular()
+                    ->defaultImageUrl(fn (Talk $talk) => 'https://ui-avatars.com/api/?background=a0a0a0&color=fff&name='.$talk->speaker->name),
+                TextColumn::make('speaker.name')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                ToggleColumn::make('new_talk'),
+                TextColumn::make('status')
+                    ->badge()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->color(fn($state)=>$state->getColor()),
+                IconColumn::make('length')
+                    ->icon(function($state){
+                        return match($state){
+                            TalkLength::NORMAL => 'heroicon-o-megaphone',
+                            TalkLength::LIGHTNING => 'heroicon-o-bolt',
+                            TalkLength::KEYNOTE => 'heroicon-o-key',
+                        };
+                    })
             ])
             ->filters([
                 //
