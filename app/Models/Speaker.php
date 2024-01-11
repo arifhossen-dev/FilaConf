@@ -9,16 +9,25 @@ use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Speaker extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
+    const QUALIFICATIONS = [
+        'business-leader' => 'Business Leader',
+        'charisma' => 'Charismatic Speaker',
+        'first-time' => 'First Time Speaker',
+        'hometown-hero' => 'Hometown Hero',
+        'humanitarian' => 'Works in Humanitarian Field',
+        'laracasts-contributor' => 'Laracasts Contributor',
+        'twitter-influencer' => 'Large Twitter Following',
+        'youtube-influencer' => 'Large YouTube Following',
+        'open-source' => 'Open Source Creator / Maintainer',
+        'unique-perspective' => 'Unique Perspective'
+    ];
+
     protected $casts = [
         'id' => 'integer',
         'qualifications' => 'array',
@@ -52,13 +61,7 @@ class Speaker extends Model
             CheckboxList::make('qualifications')
                 ->columnSpanFull()
                 ->searchable()
-                ->options([
-                    'Masters Degree' => 'Masters Degree',
-                    'business-leader' => 'Business Leader',
-                    'phd' => 'PhD',
-                    'first-time' => 'First Time Speaker',
-                    'hometown-hero' => 'Hometown Hero',
-                ])
+                ->options(self::QUALIFICATIONS)
                 ->descriptions([
                     'Masters Degree' => 'Just some descriptions',
                 ])
