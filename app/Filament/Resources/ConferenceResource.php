@@ -51,7 +51,13 @@ class ConferenceResource extends Resource
                     ->enum(Region::class)
                     ->options(Region::class),
                 Forms\Components\Select::make('venue_id')
-                    ->relationship('venue', 'name'),
+                    ->searchable()
+                    ->preload()
+                    ->createOptionForm(Venue::getForm())
+                    ->editOptionForm(Venue::getForm())
+                    ->relationship('venue', 'name', modifyQueryUsing:function(Builder $query, Forms\Get $get){
+                        return $query->where('region', $get('region'));
+                    }),
             ]);
     }
 
