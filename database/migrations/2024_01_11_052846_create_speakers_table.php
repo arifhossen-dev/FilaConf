@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email');
-            $table->json('qualifications');
-            $table->text('bio');
-            $table->string('twitter_handle');
+            $table->text('avatar')->nullable();
+            $table->json('qualifications')->nullable();
+            $table->text('bio')->nullable();
+            $table->string('twitter_handle')->nullable();
             $table->timestamps();
         });
     }
