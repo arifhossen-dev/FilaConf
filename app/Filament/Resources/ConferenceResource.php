@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\Region;
 use App\Filament\Resources\ConferenceResource\Pages;
 use App\Filament\Resources\ConferenceResource\RelationManagers;
 use App\Models\Conference;
+use App\Models\Venue;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -44,9 +46,10 @@ class ConferenceResource extends Resource
                         'archived' => 'Archived',
                     ])
                     ->required(),
-                Forms\Components\TextInput::make('region')
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\Select::make('region')
+                    ->live()
+                    ->enum(Region::class)
+                    ->options(Region::class),
                 Forms\Components\Select::make('venue_id')
                     ->relationship('venue', 'name'),
             ]);
