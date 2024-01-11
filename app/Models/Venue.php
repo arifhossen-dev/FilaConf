@@ -4,14 +4,18 @@ namespace App\Models;
 
 use App\Enums\Region;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Venue extends Model
+class Venue extends Model implements HasMedia
 {
     use HasFactory;
+    use InteractsWithMedia;  
 
     /**
      * The attributes that should be cast to native types.
@@ -37,6 +41,10 @@ class Venue extends Model
             TextInput::make('city')
                 ->required()
                 ->maxLength(255),
+            SpatieMediaLibraryFileUpload::make('photos')
+                ->collection('photos')
+                ->image()
+                ->multiple(),
             TextInput::make('postal_code')
                 ->required()
                 ->maxLength(255),
