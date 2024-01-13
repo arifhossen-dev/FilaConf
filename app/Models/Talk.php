@@ -28,7 +28,7 @@ class Talk extends Model
         'length' => TalkLength::class,
     ];
 
-    static public function getForm(): array
+    static public function getForm($speakerId = null): array
     {
         return [
             TextInput::make('title')
@@ -39,6 +39,7 @@ class Talk extends Model
                 ->maxLength(65535)
                 ->columnSpanFull(),
             Select::make('speaker_id')
+                ->hidden(fn () => $speakerId !== null)
                 ->relationship('speaker', 'name')
                 ->required(),
         ];
