@@ -4,6 +4,9 @@ namespace App\Models;
 
 use App\Enums\TalkLength;
 use App\Enums\TalkStatus;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,6 +27,22 @@ class Talk extends Model
         'status' => TalkStatus::class,
         'length' => TalkLength::class,
     ];
+
+    static public function getForm(): array
+    {
+        return [
+            TextInput::make('title')
+                ->required()
+                ->maxLength(255),
+            RichEditor::make('abstract')
+                ->required()
+                ->maxLength(65535)
+                ->columnSpanFull(),
+            Select::make('speaker_id')
+                ->relationship('speaker', 'name')
+                ->required(),
+        ];
+    }
 
     public function speaker(): BelongsTo
     {
