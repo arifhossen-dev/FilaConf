@@ -2,15 +2,20 @@
 
 namespace App\Filament\Resources\AttendeeResource\Widgets;
 
+use App\Filament\Resources\AttendeeResource\Pages\ListAttendees;
 use App\Models\Attendee;
 use Filament\Widgets\ChartWidget;
+use Filament\Widgets\Concerns\InteractsWithPageTable;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
 
 class AttendeeChartWidget extends ChartWidget
 {
+    use InteractsWithPageTable;
+
     protected static ?string $heading = 'Attendee Signups';
     protected int|string|array $columnSpan = 'full';
+    protected static ?string $pollingInterval = '1s';
     protected static ?string $maxHeight = '200px';
 
     public ?string $filter = '3months';
@@ -24,26 +29,34 @@ class AttendeeChartWidget extends ChartWidget
         ];
     }
 
+    protected function getTablePage(): string
+    {
+        return ListAttendees::class;
+    }
+
     protected function getData(): array
     {
         $filter = $this->filter;
 
+        $query = $this->getPageTableQuery();
+        $query->getQuery()->orders = [];
+
         match ($filter) {
-            'week' => $data = Trend::model(Attendee::class)
+            'week' => $data = Trend::query($query)
                 ->between(
                     start: now()->subWeek(),
                     end: now(),
                 )
                 ->perDay()
                 ->count(),
-            'month' => $data = Trend::model(Attendee::class)
+            'month' => $data = Trend::query($query)
                 ->between(
                     start: now()->subMonth(),
                     end: now(),
                 )
                 ->perDay()
                 ->count(),
-            '3months' => $data = Trend::model(Attendee::class)
+            '3months' => $data = Trend::query($query)
                 ->between(
                     start: now()->subMonths(),
                     end: now(),
