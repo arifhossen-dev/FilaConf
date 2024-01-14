@@ -16,6 +16,7 @@ class ListAttendees extends ListRecords
     {
         return [
             AttendeesStatsWidget::class,
+            AttendeeChartWidget::class,
         ];
     }
     protected function getHeaderActions(): array

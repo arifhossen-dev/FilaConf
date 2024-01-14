@@ -89,6 +89,7 @@ class AttendeeResource extends Resource
     {
         return [
             AttendeesStatsWidget::class,
+            AttendeeChartWidget::class,
         ];
     }
 
