@@ -12,6 +12,12 @@ class ListAttendees extends ListRecords
 {
     protected static string $resource = AttendeeResource::class;
 
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            AttendeesStatsWidget::class,
+        ];
+    }
     protected function getHeaderActions(): array
     {
         return [

@@ -85,6 +85,13 @@ class AttendeeResource extends Resource
         ];
     }
 
+    public static function getWidgets(): array
+    {
+        return [
+            AttendeesStatsWidget::class,
+        ];
+    }
+
     public static function getPages(): array
     {
         return [
